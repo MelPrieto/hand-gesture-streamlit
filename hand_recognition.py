@@ -1,31 +1,25 @@
+import streamlit as st
+from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
+import av
 import cv2
 from cvzone.HandTrackingModule import HandDetector
-import streamlit as st
-from PIL import Image
-import numpy as np
 
 
 def run_hand_recognition():
-    webcam = cv2.VideoCapture(0)
-    detector = HandDetector(detectionCon=0.8, maxHands=2)
+    class HandRecognitionTransFormer(VideoTransformerBase):
+        def __init__(self):
+            self.detector = HandDetector(detectionCon=0.8, maxHands=2)
 
-    stframe = st.empty()       # Area where the video will be displayed
+        def transform(self, frame):
+            img = frame.to_ndarray(format="bgr24")
+            hands, img = self.detector.findHands(img)
+            cv2.putText(img, f"Hands: {len(hands)}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
+            return img
+        
+    st.write("Starting camera and hand recognition...")
 
-    while True:
-        success, image = webcam.read()
-        if not success:
-            st.error("Could not get the camera image.")
-            break
-
-        hands, image = detector.findHands(image)
-
-        # Show numbers of hands detected
-        cv2.putText(image, f"Handas: {len(hands)}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
-
-        # Convert BGR to RGB to display it in Streamlit
-        img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        stframe.image(img_rgb, channels="RGB")
-
-        # Output if the Stremlit button is pressed
-        if st.button("Stop"):
-            break
+    webrtc_streamer(
+        key="hand-recognition",
+        video_transformer_factory=HandRecognitionTransFormer,
+        media_stream_constraints={"video": True, "audio": False }
+    )
