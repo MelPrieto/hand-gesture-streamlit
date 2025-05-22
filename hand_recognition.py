@@ -16,9 +16,16 @@ def run_hand_recognition():
             cv2.putText(img, f"Hands: {len(hands)}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
             return img
         
-    st.write("Starting camera and hand recognition...")
+    if "start" not in st.session_state:
+        st.session_state.start = False
 
-    webrtc_streamer(
+    if not st.session_state.start:
+        if st.button("Start Recognition"):
+            st.session_state.start = True
+            st.experimental_rerun()
+    else:
+        st.write("Starting camera and hand recognition...")
+        webrtc_streamer(
         key="hand-recognition",
         video_transformer_factory=HandRecognitionTransFormer,
         media_stream_constraints={"video": True, "audio": False }
