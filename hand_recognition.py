@@ -15,19 +15,10 @@ class HandRecognitionTransformer(VideoTransformerBase):
         return img
 
 def run_hand_recognition():
-    
-    if "recognition_started" not in st.session_state:
-        st.session_state.recognition_started = False
-
-    if not st.session_state.recognition_started:
-        if st.button("Start Recognition", key="start_btn"):
-            st.session_state.recognition_started = True
-            st.experimental_rerun()
-    else:
-        st.write("🔍 Starting camera and hand recognition...")
-        webrtc_streamer(
-            key="hand-recognition",
-            video_transformer_factory=HandRecognitionTransformer,
-            media_stream_constraints={"video": True, "audio": False}
-        )
+    st.info("Camera and hand recognition starting...")
+    webrtc_streamer(
+        key="hand-recognition",
+        video_transformer_factory=HandRecognitionTransformer,
+        media_stream_constraints={"video": True, "audio": False}
+    )
 
