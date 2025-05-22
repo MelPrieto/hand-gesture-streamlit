@@ -16,9 +16,18 @@ class HandRecognitionTransformer(VideoTransformerBase):
 
 def run_hand_recognition():
     st.write("Starting camera and hand recognition...")
+
+
+    rtc_configuration = {
+        "iceServers": [
+            {"urls": ["stun:stun.l.google.com:19302"]},  # Google public STUN serve
+        ]
+    }
+
     webrtc_streamer(
         key="hand-recognition",
         video_transformer_factory=HandRecognitionTransformer,
-        media_stream_constraints={"video": True, "audio": False}
+        media_stream_constraints={"video": True, "audio": False},
+        rtc_configuration=rtc_configuration   
     )
 
