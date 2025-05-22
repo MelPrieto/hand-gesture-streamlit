@@ -3,6 +3,8 @@ streamlit-webrtc
 opencv-python-headless
 cvzone
 mediapipe
+av
+
 
 
 

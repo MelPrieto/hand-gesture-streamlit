@@ -15,7 +15,7 @@ class HandRecognitionTransformer(VideoTransformerBase):
         return img
 
 def run_hand_recognition():
-    st.info("Camera and hand recognition starting...")
+    st.write("Starting camera and hand recognition...")
     webrtc_streamer(
         key="hand-recognition",
         video_transformer_factory=HandRecognitionTransformer,
