@@ -20,7 +20,7 @@ def run_hand_recognition():
         st.session_state.start = False
 
     if not st.session_state.start:
-        if st.button("Start Recognition"):
+        if st.button("Start Recognition", key="start_btn"):
             st.session_state.start = True
             st.experimental_rerun()
     else:
