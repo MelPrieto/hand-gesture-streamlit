@@ -20,14 +20,19 @@ def run_hand_recognition():
 
     rtc_configuration = {
         "iceServers": [
-            {"urls": ["stun:stun.l.google.com:19302"]},  # Google public STUN serve
+            {"urls": ["stun:stun.l.google.com:19302"]},
+            {
+                "urls": ["turn:openrelay.metered.ca:80", "turn:openrelay.metered.ca:443"],
+                "username": "openrelayproject",
+                "credential": "openrelayproject"
+            }
         ]
     }
 
     webrtc_streamer(
         key="hand-recognition",
         video_transformer_factory=HandRecognitionTransformer,
-        media_stream_constraints={"video": True, "audio": False},
-        rtc_configuration=rtc_configuration   
+        media_stream_constraints={"video": True, "audio": False },
+        rtc_configuration=rtc_configuration
     )
 
